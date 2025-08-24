@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: event-ticket-backend
+
+  security:
+    user:
+      name: admin
+      password: admin
+
+  jpa:
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+        order_inserts: true
+        jdbc.batch_size: 1000
+
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
+
+  data:
+    redis:
+      repositories:
+        enabled: false
+
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.springframework.security: DEBUG
+
+jwt:
+  private-key: classpath:jwt/app.key
+  public-key: classpath:jwt/app.pub
+  access-token-ttl: 15m   # Access token valid for 15 minutes
+  refresh-token-ttl: 7d   # Refresh token valid for 7 days
+  issuer: tickify-auth
+
+email-verification:
+  base-url: http://localhost:8080/api/v1/auth/email/verify?uid=%s&t=%s
+  required: true
+
+otp:
+  email-verification:
+    cache-prefix: otp:email-verification:%s
+    ttl: 5m
+    characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjiklmnopqrstuvwxyz1234567890
+    length: 50
