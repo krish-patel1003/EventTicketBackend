@@ -6,10 +6,12 @@ CREATE TABLE bookings (
     ticket_type_id NOT NULL,
     payment_status ENUM('PENDING', 'SUCCESS', 'FAILED') DEFAULT 'PENDING',
     billing_amount DECIMAL(10, 2) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_bookings_booking_id ON bookings(id);
+CREATE INDEX idx_bookings_booking_reference ON bookings(booking_reference);
+
 
 CREATE TABLE qr_codes (
     id UUID PRIMARY KEY,
@@ -18,5 +20,13 @@ CREATE TABLE qr_codes (
     is_valid BOOLEAN DEFAULT TRUE,
     used BOOLEAN DEFAULT FALSE,
     method ENUM('SCAN', 'BOOKING_REFERENCE') DEFAULT 'SCAN',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE booking_seats (
+    id UUID PRIMARY KEY,
+    booking_id UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+    seat_id UUID NOT NULL REFERENCES event_seats(id),
+    UNIQUE(seat_id)
 );
