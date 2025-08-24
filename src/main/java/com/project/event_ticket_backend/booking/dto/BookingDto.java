@@ -16,6 +16,7 @@ public record BookingDto(
         BookingTicketTypeDto ticketType,
         PaymentStatus paymentStatus,
         BigDecimal billingAmount,
-        List<BookingSeatDto> seats
+        List<BookingSeatDto> seats,
+        String qrCode
 ) {}
 
