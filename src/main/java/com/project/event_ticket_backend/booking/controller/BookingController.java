@@ -3,6 +3,7 @@ package com.project.event_ticket_backend.booking.controller;
 import com.project.event_ticket_backend.booking.dto.LockSeatRequestDto;
 import com.project.event_ticket_backend.booking.dto.LockSeatResponseDto;
 import com.project.event_ticket_backend.booking.dto.StartPaymentRequestDto;
+import com.project.event_ticket_backend.booking.dto.UserBookingsDto;
 import com.project.event_ticket_backend.booking.service.BookingService;
 import com.project.event_ticket_backend.booking.service.QueueService;
 import com.project.event_ticket_backend.user.service.JpaUserDetailsImpl;
@@ -10,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 import java.util.UUID;
@@ -64,5 +62,12 @@ public class BookingController {
         UUID loggedInUserId = loggedInUser.getUser().getId();
         bookingService.initiatePayment(req.bookingId(), loggedInUserId);
         return ResponseEntity.ok(Map.of("status", "PAYMENT_REQUESTED"));
+    }
+
+    @PostMapping("/my-bookings")
+    public ResponseEntity<?> userBookings(@AuthenticationPrincipal JpaUserDetailsImpl loggedInUser) {
+        UUID loggedInUserId = loggedInUser.getUser().getId();
+        UserBookingsDto response = bookingService.getUserBookings(loggedInUserId);
+        return ResponseEntity.ok(response);
     }
 }

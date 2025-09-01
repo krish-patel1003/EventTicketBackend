@@ -15,19 +15,19 @@ public interface QRCodeRepository extends JpaRepository<QRCode, UUID> {
 
     Optional<QRCode> findByBooking_BookingReference(String bookingReference);
 
-    Optional<QRCode> findByQRCode(String QRCode);
+    Optional<QRCode> findByQrCode(String qrCode);  // ✅ match entity field name exactly
 
     Optional<QRCode> findByBooking_Id(UUID bookingId);
 
-    @Query("SELECT q FROM qr_codes qr WHERE qr.qr_code = :qrCode AND qr.isValid = true AND qr.used = false")
+    @Query("SELECT q FROM QRCode q WHERE q.qrCode = :qrCode AND q.isValid = true AND q.used = false")
     Optional<QRCode> findValidUnusedQRCode(@Param("qrCode") String qrCode);
 
     @Modifying
-    @Query("UPDATE QRCode qr SET qr.used = true WHERE qr.id = :id")
-    void markedAsUsed(@Param("id") UUID id);
+    @Query("UPDATE QRCode q SET q.used = true WHERE q.id = :id")
+    void markAsUsed(@Param("id") UUID id);
 
     @Modifying
-    @Query("UPDATE QRCode qr SET qr.isValid = false WHERE q.booking_id = :bookingId")
-    void invalidateByBookingId(@Param("booking_id") UUID bookingId);
+    @Query("UPDATE QRCode q SET q.isValid = false WHERE q.booking.id = :bookingId")
+    void invalidateByBookingId(@Param("bookingId") UUID bookingId);
 
 }

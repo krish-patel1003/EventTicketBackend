@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
-public class PaymentRequestConsumer {
+public class    PaymentRequestConsumer {
 
     private final RabbitTemplate rabbit;
 

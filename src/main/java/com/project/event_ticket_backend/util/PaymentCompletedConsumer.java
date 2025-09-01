@@ -30,7 +30,7 @@ public class PaymentCompletedConsumer {
     private final EventBus eventBus;
 
     @Transactional
-    @RabbitListener(queues = RabbitMQConfig.RK_PAYMENT_COMPLETED)
+    @RabbitListener(queues = RabbitMQConfig.Q_PAYMENT_COMPLETED)
     public void onPaymentCompleted(PaymentCompletedDto request) throws Exception {
 
         var booking = bookingRepository.findById(request.bookingId())

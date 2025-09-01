@@ -6,6 +6,7 @@ import java.util.UUID;
 public record BookingEventDto(
         UUID id,
         String title,
+        String venue,
         Instant startDate,
         Instant endDate
 ) {

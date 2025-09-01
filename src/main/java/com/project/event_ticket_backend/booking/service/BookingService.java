@@ -1,18 +1,24 @@
 package com.project.event_ticket_backend.booking.service;
 
+import com.project.event_ticket_backend.booking.dto.BookingDto;
 import com.project.event_ticket_backend.booking.dto.LockSeatRequestDto;
 import com.project.event_ticket_backend.booking.dto.PaymentRequestDto;
+import com.project.event_ticket_backend.booking.dto.UserBookingsDto;
 import com.project.event_ticket_backend.booking.entity.Booking;
 import com.project.event_ticket_backend.booking.entity.BookingSeat;
 import com.project.event_ticket_backend.booking.entity.PaymentStatus;
+import com.project.event_ticket_backend.booking.entity.QRCode;
+import com.project.event_ticket_backend.booking.mapper.BookingMapper;
 import com.project.event_ticket_backend.booking.repository.BookingRepository;
 import com.project.event_ticket_backend.booking.repository.BookingSeatRepository;
+import com.project.event_ticket_backend.booking.repository.QRCodeRepository;
 import com.project.event_ticket_backend.config.RabbitMQConfig;
 import com.project.event_ticket_backend.event.entity.TicketType;
 import com.project.event_ticket_backend.event.repository.EventRepository;
 import com.project.event_ticket_backend.event.repository.EventSeatRepository;
 import com.project.event_ticket_backend.event.repository.TicketTypeRepository;
 import com.project.event_ticket_backend.user.entity.User;
+import com.project.event_ticket_backend.user.repository.UserRepository;
 import com.project.event_ticket_backend.util.EventBus;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,7 +41,10 @@ public class BookingService {
     private final BookingSeatRepository bookingSeatRepo;
     private final EventRepository eventRepo;
     private final TicketTypeRepository ticketTypeRepo;
+    private final UserRepository userRepo;
     private final EventBus eventBus;
+    private final BookingMapper bookingMapper;
+    private final QRCodeRepository qrCodeRepo;
 
     public void ensureActiveSlot(UUID eventId, UUID userId) throws Exception{
         if (!queueService.hasActiveSlot(eventId, userId)) {
@@ -107,5 +117,25 @@ public class BookingService {
 
     private String generateRef() {
         return "TICK - " + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+    }
+
+    public UserBookingsDto getUserBookings(UUID loggedInUserId) {
+        User user = userRepo.findById(loggedInUserId)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        List<Booking> bookings = bookingRepo.findAllByUser(user);
+
+        List<BookingDto> bookingDtos = bookings.stream()
+                .map(booking -> {
+                    QRCode qrCode = qrCodeRepo.findByBooking_Id(booking.getId()).orElse(null);
+                    return bookingMapper.entityToDto(booking, qrCode);
+                })
+                .toList();
+
+        return new UserBookingsDto(
+                user.getId(),
+                user.getEmail(),
+                bookingDtos
+        );
     }
 }

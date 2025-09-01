@@ -103,3 +103,11 @@ CREATE TABLE qr_codes (
 );
 
 CREATE INDEX idx_qr_codes_booking_id ON qr_codes(booking_id);
+
+
+CREATE TABLE booking_seats (
+    id UUID PRIMARY KEY,
+    booking_id UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+    seat_id UUID NOT NULL REFERENCES event_seats(id),
+    UNIQUE(seat_id)  -- ensures no double booking of same seat
+);

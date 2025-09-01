@@ -1,6 +1,5 @@
 package com.project.event_ticket_backend.booking.repository;
 
-import com.project.event_ticket_backend.booking.dto.BookingDto;
 import com.project.event_ticket_backend.booking.entity.Booking;
 import com.project.event_ticket_backend.event.entity.Event;
 import com.project.event_ticket_backend.event.entity.TicketType;
