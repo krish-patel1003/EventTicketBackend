@@ -2,8 +2,10 @@ package com.project.event_ticket_backend.event.controller;
 
 import com.project.event_ticket_backend.event.dto.CreateEventDto;
 import com.project.event_ticket_backend.event.dto.EventResponseDto;
+import com.project.event_ticket_backend.event.dto.EventSeatDto;
 import com.project.event_ticket_backend.event.dto.UpdateEventDto;
 import com.project.event_ticket_backend.event.mapper.EventMapper;
+import com.project.event_ticket_backend.event.service.EventSeatService;
 import com.project.event_ticket_backend.event.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +24,7 @@ public class EventController {
 
     private final EventMapper eventMapper;
     private final EventService eventService;
+    private final EventSeatService eventSeatService;
 
     @PreAuthorize("hasRole('ORGANIZER') or hasRole('ADMIN')")
     @PostMapping("/")
@@ -52,5 +56,12 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable UUID id) {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ORGANIZER') or hasRole('ADMIN')")
+    @GetMapping("/{eventId}/seats/available")
+    public ResponseEntity<List<EventSeatDto>> getAvailableSeats(@PathVariable UUID eventId) {
+        List<EventSeatDto> availableSeats = eventSeatService.getAvailableSeats(eventId);
+        return ResponseEntity.ok(availableSeats);
     }
 }
