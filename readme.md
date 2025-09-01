@@ -1,125 +1,86 @@
 # API Design – Phase 1
 
-## Auth Endpoints (User Service)
-| Method | Endpoint             | Role       | Description       |
-| ------ | -------------------- | ---------- | ----------------- |
-| POST   | `/api/auth/register` | Public     | Register new user |
-| POST   | `/api/auth/login`    | Public     | Login and get JWT |
-| GET    | `/api/users/me`      | USER/ADMIN | Profile info      |
+## Auth & Registration
+| Method | Endpoint                   | Role   | Description                  |
+| ------ | -------------------------- | ------ | ---------------------------- |
+| POST   | `/api/v1/auth/register`    | Public | Register new user            |
+| POST   | `/api/v1/auth/login`       | Public | Login and get JWT            |
+| POST   | `/api/v1/auth/logout`      | USER   | Logout + revoke refresh token|
+| POST   | `/api/v1/auth/refresh-token` | Public | Refresh JWT using token      |
+| GET    | `/api/v1/user/me`          | USER   | Get current user profile     |
 
+### Email Verification
+| Method | Endpoint                                | Role   | Description                 |
+| ------ | --------------------------------------- | ------ | --------------------------- |
+| POST   | `/api/v1/auth/email/resend-verification?email=...` | Public | Resend verification link    |
+| GET    | `/api/v1/auth/email/verify?uid=...&t=...` | Public | Verify email address        |
 
-## Event Endpoints (Event Service)
-| Method | Endpoint                 | Role   | Description           |
-| ------ | ------------------------ | ------ | --------------------- |
-| POST   | `/api/events`            | ADMIN  | Create new event      |
-| GET    | `/api/events`            | Public | List all events       |
-| GET    | `/api/events/{event_id}`       | Public | Get single event      |
-| POST   | `/api/events/{event_id}/seats` | ADMIN  | Define seating layout |
-| POST   | `/api/events/{event_id}/ticket-types` | ADMIN  | Create ticket types |
-| GET    | `/api/events/{event_id}/ticket-types`       | Public | Get ticket Types     |
-
-
-## Booking Endpoints (Booking Service)
-
-| Method | Endpoint                | Role | Description                             |
-| ------ | ----------------------- | ---- | --------------------------------------- |
-| POST   | `/api/bookings/lock`    | USER | Lock a seat (Redis)                     |
-| POST   | `/api/bookings/confirm` | USER | Confirm booking (DB + emit to RabbitMQ) |
-| GET    | `/api/bookings/my`      | USER | View user bookings                      |
-
-
-## Email (Notification Service)
-    - RabbitMQ queue: booking.confirmed
-    - Consumer sends email via MailHog using JavaMailSender
-
-## Redis Lock Structure 
-```
-Key: event:{eventId}:ticketType:{ticketTypeId}
-Value: number of locked tickets
-TTL: 10 mins
-```
-- Helps prevent overselling when a million people rush to book.
-
-## Folder Structure
-``` 
-com.event-ticketing-backend-v1
-├── user/
-├── event/
-├── booking/
-│   └── service/
-│       ├── BookingService.java       (business logic)
-│       ├── TicketLockService.java   (Redis logic)
-│       └── BookingPublisher.java    (publishes to RabbitMQ)
-├── notification/
-│   └── service/
-│       └── BookingNotificationListener.java (RabbitMQ listener)
-├── config/
-│   ├── RabbitMQConfig.java
-│   └── RedisConfig.java
-
-```
-
-# Database Design
-## User Service
+---
 
 ## Event Service
-```
-Events (
-id UUID primary key,
-event_title String,
-event_description String,
-ticket_sale_start_date,
-ticket_sale_end_date,
-event_start_date,
-event_end_date,
-organizer_id foreign key (user_id),
-created_at,
-updated_at
-is_active boolean
-)
-```
-```
-Ticket-types (
-id UUID primary key,
-event_id foreign key (event_id),
-type_title String,
-type_Desc String,
-price double,
-no_of_seats_available,
-)
-```
+| Method | Endpoint                 | Role                   | Description               |
+| ------ | ------------------------ | ---------------------- | ------------------------- |
+| POST   | `/api/v1/events/`        | ORGANIZER/ADMIN        | Create new event          |
+| GET    | `/api/v1/events/`        | USER/ORGANIZER/ADMIN   | List active events        |
+| PATCH  | `/api/v1/events/{id}`    | ORGANIZER/ADMIN        | Update event              |
+| DELETE | `/api/v1/events/{id}`    | ORGANIZER/ADMIN        | Delete event              |
 
-## Booking service
-```
-bookings (
-id UUID primary key,
-booking_refrence generated_id
-user_id (user who bought the ticket),
-event_id (to which event)
-ticket_type_id,
-payment_Status,
-billing_amount,
-created_at
-)
-```
+---
 
-```
-qr_code (
-id UUID primary Key,
-booking_id foreign key,
-qr_code,
-is_valid boolean,
-used boolean,
-method enum[scan, booking number],
-created_at
-)
-```
+## Ticket Type Service
+| Method | Endpoint                       | Role                   | Description           |
+| ------ | ------------------------------ | ---------------------- | --------------------- |
+| POST   | `/api/v1/ticket-types/`        | ORGANIZER/ADMIN        | Create ticket type    |
+| GET    | `/api/v1/ticket-types/event/{eventId}` | USER/ORGANIZER/ADMIN   | Get ticket types      |
+| PATCH  | `/api/v1/ticket-types/{id}`    | ORGANIZER/ADMIN        | Update ticket type    |
+| DELETE | `/api/v1/ticket-types/{id}`    | ORGANIZER/ADMIN        | Delete ticket type    |
 
-## Notification Service
+---
 
-## Staff service
+## Booking Service
+| Method | Endpoint                           | Role | Description                           |
+| ------ | ---------------------------------- | ---- | ------------------------------------- |
+| POST   | `/api/v1/bookings/lock`            | USER | Lock seats (Redis) & create pending booking |
+| POST   | `/api/v1/bookings/payment/initiate`| USER | Initiate payment (publishes to RabbitMQ) |
+| POST   | `/api/v1/bookings/my-bookings`     | USER | View user’s bookings                  |
 
-- staff should be able to scan a qr_code, and verify entry
-- if qr_code doesn't work, enter booking_reference manually 
-- easy interface to understand.
-- only backend service for now
+### Queueing
+| Method | Endpoint                             | Role | Description                   |
+| ------ | ------------------------------------ | ---- | ----------------------------- |
+| POST   | `/api/v1/booking/queue/{eventId}/join`   | USER | Join booking queue for event  |
+| GET    | `/api/v1/booking/queue/{eventId}/status` | USER | Get queue position + status   |
+
+---
+
+## Staff Service
+| Method | Endpoint              | Role      | Description                         |
+| ------ | --------------------- | --------- | ----------------------------------- |
+| POST   | `/api/v1/staff/qr`    | STAFF     | Validate ticket by QR code          |
+| POST   | `/api/v1/staff/booking` | STAFF   | Validate ticket by booking reference|
+
+---
+
+## Venue Service
+| Method | Endpoint            | Role   | Description          |
+| ------ | ------------------- | ------ | -------------------- |
+| GET    | `/api/v1/venue/`    | Public | List all venues      |
+
+---
+
+## RabbitMQ Flow
+1. **`/bookings/lock`** → create pending booking in DB
+2. **`/bookings/payment/initiate`** → publish `payment.requested`
+3. **Payment Service** consumes → publishes `payment.completed`
+4. **Booking Service** consumes `payment.completed`
+    - On SUCCESS → mark seats reserved, generate QR, publish `booking.confirmed`
+    - On FAIL → release seat locks
+5. **Notification Service** consumes `booking.confirmed` and sends email
+
+---
+
+## Redis Lock Structure
+- Key: event:{eventId}:seat:{seatId}
+- Value: userId (or lock reference)
+- TTL: 10 mins
+
+- Ensures no double-booking during high concurrency.
