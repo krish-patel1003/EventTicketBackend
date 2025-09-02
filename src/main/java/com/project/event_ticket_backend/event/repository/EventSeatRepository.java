@@ -31,13 +31,13 @@ public interface EventSeatRepository extends JpaRepository<EventSeat, UUID> {
 
     // Event Level
     @Modifying
-    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.eventId = :eventId")
+    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.event.id = :eventId")
     int assignTicketTypeToAll(@Param("eventId") UUID eventId,
                               @Param("ticketTypeId") UUID ticketTypeId);
 
     // Section Level
     @Modifying
-    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.eventId = :eventId AND es.section = :section")
+    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.event.id = :eventId AND es.section = :section")
     int assignTicketTypeBySection(@Param("eventId") UUID eventId,
                                   @Param("ticketTypeId") UUID ticketTypeId,
                                   @Param("section") String section);
@@ -45,14 +45,14 @@ public interface EventSeatRepository extends JpaRepository<EventSeat, UUID> {
 
     // Row Level
     @Modifying
-    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.eventId = :eventId AND es.rowLable = :rowLabel")
+    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.event.id = :eventId AND es.rowLabel = :rowLabel")
     int assignTicketTypeByRowLabel(@Param("eventId") UUID eventId,
                                   @Param("ticketTypeId") UUID ticketTypeId,
                                   @Param("rowLabel") String rowLabel);
 
     // Seat Level
     @Modifying
-    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.eventId = :eventId AND es.id = :seatId")
+    @Query("UPDATE EventSeat es SET es.ticketType.id = :ticketTypeId WHERE es.event.id = :eventId AND es.id = :seatId")
     int assignTicketTypeBySeatId(@Param("eventId") UUID eventId,
                                    @Param("ticketTypeId") UUID ticketTypeId,
                                    @Param("seatId") UUID seatId);

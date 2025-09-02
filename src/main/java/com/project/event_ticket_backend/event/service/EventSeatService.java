@@ -61,6 +61,7 @@ public class EventSeatService {
         List<EventSeat> seats = eventSeatRepository.findByEvent_IdAndIsLockedFalseAndIsReservedFalse(eventId);
 
         return seats.stream().map(es -> new EventSeatDto(
+                    es.getId(),
                     es.getEvent().getId(),
                     es.getEvent().getTitle(),
                     es.getSeatNumber(),

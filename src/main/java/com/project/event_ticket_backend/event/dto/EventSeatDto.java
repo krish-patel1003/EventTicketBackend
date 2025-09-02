@@ -3,6 +3,7 @@ package com.project.event_ticket_backend.event.dto;
 import java.util.UUID;
 
 public record EventSeatDto(
+        UUID id,
         UUID event_id,
         String event,
         String seatNumber,
