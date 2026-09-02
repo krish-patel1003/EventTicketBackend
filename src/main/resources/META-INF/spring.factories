@@ -1,0 +1,4 @@
+# FailureAnalyzers run before the application context exists, so they are registered here
+# rather than as beans.
+org.springframework.boot.diagnostics.FailureAnalyzer=\
+com.tickify.config.DatabaseConnectionFailureAnalyzer

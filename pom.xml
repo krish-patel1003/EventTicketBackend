@@ -92,7 +92,8 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>runtime</scope>
+			<!-- Compile scope, not runtime: DatabaseConnectionFailureAnalyzer inspects
+			     PSQLException's SQLState to tell a port collision from a dead service. -->
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
