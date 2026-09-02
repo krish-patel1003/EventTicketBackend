@@ -1,0 +1,267 @@
+{
+    "metrics": {
+        "http_req_duration{name:seat_lock}": {
+            "min": 3.08379,
+            "med": 639.134149,
+            "p(90)": 1702.859668,
+            "p(95)": 2117.97803,
+            "p(99)": 2903.169974800001,
+            "max": 4476.756194,
+            "avg": 763.0728587356207,
+            "thresholds": {
+                "p(95)<1000": true
+            }
+        },
+        "data_sent": {
+            "count": 11862116,
+            "rate": 155487.52009908576
+        },
+        "http_reqs": {
+            "count": 16043,
+            "rate": 210.29016112720808
+        },
+        "http_req_blocked": {
+            "p(95)": 0.015233599999999995,
+            "p(99)": 0.29981229999999987,
+            "max": 63.188059,
+            "avg": 0.02370048151841928,
+            "min": 0.001509,
+            "med": 0.00566,
+            "p(90)": 0.010426200000000005
+        },
+        "booking_success_rate": {
+            "passes": 672,
+            "fails": 319,
+            "value": 0.6781029263370333
+        },
+        "seats_won": {
+            "count": 1459,
+            "rate": 19.124437142965565
+        },
+        "http_req_duration{name:seats_available}": {
+            "min": 7.441187,
+            "med": 291.194996,
+            "p(90)": 931.921219,
+            "p(95)": 1067.8061200000002,
+            "p(99)": 1364.4197307000004,
+            "max": 1820.667538,
+            "avg": 399.8030741120075,
+            "thresholds": {
+                "p(95)<2000": false
+            }
+        },
+        "admitted_rate": {
+            "fails": 0,
+            "passes": 991,
+            "value": 1
+        },
+        "http_req_sending": {
+            "med": 0.021464,
+            "p(90)": 0.06909380000000011,
+            "p(95)": 0.11132349999999996,
+            "p(99)": 0.2921949799999994,
+            "max": 335.855975,
+            "avg": 0.15273635654179418,
+            "min": 0.00625
+        },
+        "http_req_duration{expected_response:true}": {
+            "max": 4476.756194,
+            "avg": 458.4468571931328,
+            "min": 1.537185,
+            "med": 358.24327700000003,
+            "p(90)": 931.8691551000001,
+            "p(95)": 1229.7783767999995,
+            "p(99)": 1888.41242719
+        },
+        "http_req_duration{name:queue_status}": {
+            "max": 2690.513907,
+            "avg": 440.6709601683062,
+            "min": 1.537185,
+            "med": 346.712191,
+            "p(90)": 831.1658128,
+            "p(95)": 1118.6392633999997,
+            "p(99)": 1882.7349931600002,
+            "thresholds": {
+                "p(95)<300": true
+            }
+        },
+        "http_req_failed": {
+            "passes": 261,
+            "fails": 15782,
+            "value": 0.016268777660038647
+        },
+        "waiting_room_admission_ms": {
+            "p(90)": 11567,
+            "p(95)": 12435,
+            "p(99)": 13698.3,
+            "max": 14205,
+            "avg": 7636.052472250252,
+            "min": 502,
+            "med": 7408
+        },
+        "http_req_duration{name:queue_join}": {
+            "avg": 489.0808720464169,
+            "min": 1.945977,
+            "med": 351.459219,
+            "p(90)": 1082.414829,
+            "p(95)": 1495.9141135,
+            "p(99)": 2000.9478253000032,
+            "max": 2970.26651,
+            "thresholds": {
+                "p(95)<500": true
+            }
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "max": 0
+        },
+        "iteration_duration": {
+            "p(95)": 20429.108041,
+            "p(99)": 24379.54783320001,
+            "max": 26439.491222,
+            "avg": 12722.464644682164,
+            "min": 699.689361,
+            "med": 13303.71842,
+            "p(90)": 18829.222087
+        },
+        "seat_contention_409": {
+            "count": 187,
+            "rate": 2.4511787153766695
+        },
+        "http_req_receiving": {
+            "avg": 2.0868424814560815,
+            "min": 0.017081,
+            "med": 0.368951,
+            "p(90)": 2.613829800000008,
+            "p(95)": 5.618092499999997,
+            "p(99)": 21.13476836,
+            "max": 570.620414
+        },
+        "booking_confirm_ms": {
+            "med": 2639,
+            "p(90)": 7036,
+            "p(95)": 8138.999999999993,
+            "p(99)": 9252.979999999994,
+            "max": 9951,
+            "avg": 3097.1741071428573,
+            "min": 505
+        },
+        "data_received": {
+            "count": 351122096,
+            "rate": 4602475.979752105
+        },
+        "unexpected_errors": {
+            "rate": 0.9699851600955804,
+            "count": 74,
+            "thresholds": {
+                "count<1": true
+            }
+        },
+        "http_req_failed{name:seat_lock}": {
+            "passes": 261,
+            "fails": 730,
+            "thresholds": {
+                "rate<0.01": true
+            },
+            "value": 0.26337033299697277
+        },
+        "checks": {
+            "passes": 4375,
+            "fails": 0,
+            "value": 1
+        },
+        "vus": {
+            "value": 2,
+            "min": 2,
+            "max": 200
+        },
+        "vus_max": {
+            "max": 200,
+            "value": 200,
+            "min": 200
+        },
+        "http_req_duration": {
+            "p(95)": 1251.3837960999997,
+            "p(99)": 1905.4785846799994,
+            "max": 4476.756194,
+            "avg": 459.9424884203719,
+            "min": 1.537185,
+            "med": 357.804506,
+            "p(90)": 940.7095808000007
+        },
+        "iterations": {
+            "count": 991,
+            "rate": 12.989936400739463
+        },
+        "http_req_waiting": {
+            "avg": 457.7029095823726,
+            "min": 1.17601,
+            "med": 356.77291,
+            "p(90)": 925.548703800001,
+            "p(95)": 1236.0791178,
+            "p(99)": 1904.5911379399995,
+            "max": 4476.16468
+        },
+        "http_req_connecting": {
+            "avg": 0.009894261360094745,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0.18165097999999988,
+            "max": 62.793737
+        }
+    },
+    "setup_data": {
+        "eventId": "28883bf4-fbc9-4733-9d23-31552a904a68",
+        "ticketTypeId": "75851ff2-2746-4d47-8750-48d87f55f1a3"
+    },
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "login 200": {
+                    "id": "48b06dc5cde7f6ebb606ad7da726a2a5",
+                    "passes": 991,
+                    "fails": 0,
+                    "name": "login 200",
+                    "path": "::login 200"
+                },
+                "queue join 200": {
+                    "passes": 991,
+                    "fails": 0,
+                    "name": "queue join 200",
+                    "path": "::queue join 200",
+                    "id": "585a5ed54b65a381441833eb7dced426"
+                },
+                "seat map 200": {
+                    "name": "seat map 200",
+                    "path": "::seat map 200",
+                    "id": "8bbe9212d14ff82b486eec09425e055c",
+                    "passes": 991,
+                    "fails": 0
+                },
+                "payment accepted": {
+                    "name": "payment accepted",
+                    "path": "::payment accepted",
+                    "id": "5302e54b352bc86d54379751784c7791",
+                    "passes": 730,
+                    "fails": 0
+                },
+                "confirmed booking has a QR code": {
+                    "id": "44ae6a5693f53e48dc6162f2676c71e7",
+                    "passes": 672,
+                    "fails": 0,
+                    "name": "confirmed booking has a QR code",
+                    "path": "::confirmed booking has a QR code"
+                }
+            },
+        "name": "",
+        "path": ""
+    }
+}

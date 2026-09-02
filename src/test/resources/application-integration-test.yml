@@ -1,0 +1,39 @@
+# Settings for the *IT end-to-end tests.
+#
+# The tests drive the real booking flow, so anything that would make it slow or
+# non-deterministic is turned down here rather than in the tests themselves.
+spring:
+  docker:
+    compose:
+      enabled: false
+  mail:
+    # No SMTP server in the test environment; verification is disabled below so nothing sends.
+    host: localhost
+    port: 1025
+  jpa:
+    show-sql: false
+
+email-verification:
+  # Registration in a test must produce a usable account without an inbox round-trip.
+  required: false
+
+logging:
+  level:
+    root: WARN
+    com.tickify: INFO
+
+tickify:
+  queue:
+    # Admit users almost immediately so a test does not sit through the production cadence.
+    promotion-interval-ms: 200
+    promotion-batch-size: 100
+    slot-ttl: 5m
+  seat-lock:
+    ttl: 2m
+  payment:
+    # The real provider stand-in sleeps 3s; the saga is what is under test, not the delay.
+    simulated-latency-ms: 0
+    success-rate: 1.0
+  seed:
+    # Each test creates the venue it needs, at the size it needs.
+    enabled: false

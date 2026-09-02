@@ -1,0 +1,26 @@
+
+       ✓ login 200
+
+     checks.........................: 100.00% 25960 out of 25960
+     data_received..................: 140 MB  3.1 MB/s
+     data_sent......................: 20 MB   426 kB/s
+     http_req_blocked...............: avg=23.98µs  min=1.6µs    med=4.98µs   p(90)=8.73µs  p(95)=12.04µs  p(99)=231.77µs max=41.12ms 
+     http_req_connecting............: avg=13.31µs  min=0s       med=0s       p(90)=0s      p(95)=0s       p(99)=104.31µs max=10.9ms  
+     http_req_duration..............: avg=7.27ms   min=1.09ms   med=4.63ms   p(90)=10.34ms p(95)=14.64ms  p(99)=65.21ms  max=394.62ms
+       { expected_response:true }...: avg=7.27ms   min=1.09ms   med=4.63ms   p(90)=10.34ms p(95)=14.64ms  p(99)=65.21ms  max=394.62ms
+     ✓ { name:events_list }.........: avg=9.43ms   min=2.21ms   med=5.81ms   p(90)=12.24ms p(95)=17.49ms  p(99)=106.32ms max=394.62ms
+     ✓ { name:me }..................: avg=5.35ms   min=1.09ms   med=2.94ms   p(90)=6.84ms  p(95)=10.43ms  p(99)=66.36ms  max=341.32ms
+   ✓ http_req_failed................: 0.00%   0 out of 25961
+     http_req_receiving.............: avg=484.2µs  min=20.48µs  med=307.6µs  p(90)=1.05ms  p(95)=1.51ms   p(99)=2.84ms   max=63.09ms 
+     http_req_sending...............: avg=31.09µs  min=6.08µs   med=15.15µs  p(90)=47.53µs p(95)=73.4µs   p(99)=242.09µs max=7.52ms  
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       p(90)=0s      p(95)=0s       p(99)=0s       max=0s      
+     http_req_waiting...............: avg=6.75ms   min=968.8µs  med=4.18ms   p(90)=9.57ms  p(95)=13.81ms  p(99)=64.21ms  max=394.07ms
+     http_reqs......................: 25961   568.502158/s
+     iteration_duration.............: avg=523.17ms min=506.99ms med=515.76ms p(90)=529.8ms p(95)=541.83ms p(99)=772.99ms max=941.22ms
+     iterations.....................: 8653    189.486121/s
+     vus............................: 100     min=100            max=100
+     vus_max........................: 100     min=100            max=100
+
+
+running (0m45.7s), 000/100 VUs, 8653 complete and 0 interrupted iterations
+browsing ✓ [ 100% ] 100 VUs  45s

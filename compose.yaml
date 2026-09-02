@@ -1,26 +1,64 @@
+# Backing services for local development.
+#
+# `./mvnw spring-boot:run` starts these automatically (spring-boot-docker-compose).
+# To manage them yourself:  docker compose up -d
+# Without a Docker daemon:  ./scripts/dev-stack.sh start
+#
+# Ports are fixed rather than ephemeral so the same values work whether the app is
+# started by Maven, from the jar, or from an IDE.
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:16-alpine'
+    container_name: tickify-postgres
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: secret
     ports:
-      - '5432'
-  rabbitmq:
-    image: 'rabbitmq:latest'
-    environment:
-      - 'RABBITMQ_DEFAULT_PASS=secret'
-      - 'RABBITMQ_DEFAULT_USER=myuser'
-    ports:
-      - '5672'
+      - '5432:5432'
+    volumes:
+      - tickify-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U myuser -d mydatabase']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   redis:
-    image: 'redis:latest'
+    image: 'redis:7-alpine'
+    container_name: tickify-redis
+    # Seat locks and queue slots are deliberately ephemeral, so persistence is off:
+    # nothing here needs to survive a restart, and fsync would only add latency.
+    command: ['redis-server', '--save', '', '--appendonly', 'no', '--maxmemory', '512mb']
     ports:
       - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  rabbitmq:
+    image: 'rabbitmq:3.13-management-alpine'
+    container_name: tickify-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: myuser
+      RABBITMQ_DEFAULT_PASS: secret
+    ports:
+      - '5672:5672'
+      - '15672:15672'   # management UI: http://localhost:15672 (myuser / secret)
+    healthcheck:
+      test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
   mailhog:
     image: mailhog/mailhog
-    container_name: 'mailhog'
+    container_name: tickify-mailhog
     ports:
-      - "1025:1025"
-      - "8025:8025"
+      - '1025:1025'     # SMTP
+      - '8025:8025'     # web inbox: http://localhost:8025
+
+volumes:
+  tickify-pgdata:

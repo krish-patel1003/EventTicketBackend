@@ -1,54 +1,130 @@
 spring:
   application:
-    name: event-ticket-backend
+    name: tickify
 
-  security:
-    user:
-      name: admin
-      password: admin
-
-  jpa:
-    open-in-view: false
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        ddl-auto: update
-        order_inserts: true
-        jdbc.batch_size: 1000
-
-  mail:
-    host: localhost
-    port: 1025
-    properties:
-      mail.smtp.auth: false
-      mail.smtp.starttls.enable: false
+  # Every backing service is addressable through an env var so the same jar runs
+  # against docker-compose locally and against managed services in a deployment.
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mydatabase}
+    username: ${DB_USERNAME:myuser}
+    password: ${DB_PASSWORD:secret}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:30}
+      minimum-idle: ${DB_POOL_MIN_IDLE:10}
+      connection-timeout: 10000
+      pool-name: tickify-pool
 
   data:
     redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
       repositories:
         enabled: false
+
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:myuser}
+    password: ${RABBITMQ_PASSWORD:secret}
+    listener:
+      simple:
+        concurrency: ${RABBITMQ_CONSUMERS:8}
+        max-concurrency: ${RABBITMQ_MAX_CONSUMERS:32}
+        prefetch: 20
+
+  # `spring-boot-docker-compose` boots compose.yaml automatically during `mvn spring-boot:run`.
+  # Disable it when you manage the backing services yourself.
+  docker:
+    compose:
+      enabled: ${DOCKER_COMPOSE_ENABLED:true}
+      file: compose.yaml
+      lifecycle-management: start_only
+
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    baseline-on-migrate: true
+
+  jpa:
+    open-in-view: false
+    show-sql: ${SHOW_SQL:false}
+    hibernate:
+      ddl-auto: ${DDL_AUTO:validate}
+    properties:
+      hibernate:
+        format_sql: true
+        order_inserts: true
+        jdbc.batch_size: 500
+
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:1025}
+    properties:
+      mail.smtp.auth: false
+      mail.smtp.starttls.enable: false
 
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
 
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+  tomcat:
+    threads:
+      max: ${TOMCAT_MAX_THREADS:200}
+
+# ---------------------------------------------------------------------------
+# Observability
+# ---------------------------------------------------------------------------
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,loggers
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    # Outbound SMTP is best-effort: a mail outage delays verification e-mails but must not
+    # take the service out of the load balancer, so it is kept out of the health aggregate.
+    mail:
+      enabled: false
+  metrics:
+    tags:
+      application: tickify
+  observations:
+    key-values:
+      application: tickify
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.orm.jdbc.bind: TRACE
-    org.springframework.security: DEBUG
+    root: INFO
+    com.tickify: ${LOG_LEVEL_APP:INFO}
+    org.hibernate.SQL: ${LOG_LEVEL_SQL:WARN}
+    org.springframework.security: ${LOG_LEVEL_SECURITY:WARN}
 
+# ---------------------------------------------------------------------------
+# Application settings
+# ---------------------------------------------------------------------------
 jwt:
-  private-key: classpath:jwt/app.key
-  public-key: classpath:jwt/app.pub
+  private-key: ${JWT_PRIVATE_KEY:classpath:jwt/app.key}
+  public-key: ${JWT_PUBLIC_KEY:classpath:jwt/app.pub}
   access-token-ttl: 15m   # Access token valid for 15 minutes
   refresh-token-ttl: 7d   # Refresh token valid for 7 days
   issuer: tickify-auth
 
 email-verification:
-  base-url: http://localhost:8080/api/v1/auth/email/verify?uid=%s&t=%s
-  required: true
+  base-url: ${APP_BASE_URL:http://localhost:8080}/api/v1/auth/email/verify?uid=%s&t=%s
+  required: ${EMAIL_VERIFICATION_REQUIRED:true}
 
 otp:
   email-verification:
@@ -56,3 +132,51 @@ otp:
     ttl: 5m
     characters: ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghjiklmnopqrstuvwxyz1234567890
     length: 50
+
+tickify:
+  cors:
+    # Origins allowed to call the API from a browser (the React dev server by default).
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:4173}
+  queue:
+    # How many waiting users the promoter moves into the booking window per tick,
+    # and how long a promoted user keeps their slot.
+    promotion-batch-size: ${QUEUE_BATCH_SIZE:50}
+    promotion-interval-ms: ${QUEUE_PROMOTION_INTERVAL_MS:1000}
+    slot-ttl: ${QUEUE_SLOT_TTL:7m}
+  seat-lock:
+    ttl: ${SEAT_LOCK_TTL:10m}
+  seed:
+    # Demo venues created on startup. Turn off (or shrink) for production.
+    enabled: ${SEED_ENABLED:true}
+    venues:
+      - name: National Stadium
+        location: City A
+        capacity: ${SEED_VENUE_1_CAPACITY:5000}
+      - name: Grand Arena
+        location: City B
+        capacity: ${SEED_VENUE_2_CAPACITY:10000}
+
+---
+# Machine-readable logs for anything that ships to a log aggregator.
+spring:
+  config:
+    activate:
+      on-profile: json-logs
+
+---
+# Profile used by the k6 load tests: no e-mail verification wall, no SQL noise,
+# bigger pools, and JSON logs so the run can be analysed afterwards.
+spring:
+  config:
+    activate:
+      on-profile: loadtest
+  jpa:
+    show-sql: false
+
+email-verification:
+  required: false
+
+logging:
+  level:
+    root: WARN
+    com.tickify: INFO

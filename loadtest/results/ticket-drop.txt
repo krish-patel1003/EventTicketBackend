@@ -1,0 +1,32 @@
+     booking_confirm_ms.............: avg=2.25s    min=504ms    med=2.49s    p(90)=3.47s    p(95)=3.62s    p(99)=3.76s    max=3.94s   
+     booking_success_rate...........: 22.70%  1004 out of 4421
+     checks.........................: 100.00% 92371 out of 92371
+     data_received..................: 598 MB  8.0 MB/s
+     data_sent......................: 82 MB   1.1 MB/s
+     http_req_blocked...............: avg=140.15µs min=1.41µs   med=4.01µs   p(90)=7.74µs   p(95)=10.41µs  p(99)=282.99µs max=207.23ms
+     http_req_connecting............: avg=100.44µs min=0s       med=0s       p(90)=0s       p(95)=0s       p(99)=107.67µs max=207.1ms 
+     http_req_duration..............: avg=86.2ms   min=1.24ms   med=77.9ms   p(90)=158.79ms p(95)=190.75ms p(99)=269.08ms max=571.45ms
+       { expected_response:true }...: avg=86.2ms   min=1.24ms   med=77.9ms   p(90)=158.79ms p(95)=190.75ms p(99)=269.08ms max=571.45ms
+     ✓ { name:queue_join }..........: avg=85.89ms  min=1.24ms   med=80.5ms   p(90)=153.56ms p(95)=178.29ms p(99)=232.19ms max=452.75ms
+     ✓ { name:queue_status }........: avg=61.65ms  min=1.55ms   med=53.89ms  p(90)=119.52ms p(95)=148.86ms p(99)=206.02ms max=308.11ms
+     ✓ { name:seat_lock }...........: avg=114.8ms  min=1.94ms   med=100.21ms p(90)=206.4ms  p(95)=257.67ms p(99)=368.88ms max=571.45ms
+     ✓ { name:seats_available }.....: avg=84.36ms  min=1.33ms   med=74.62ms  p(90)=157.93ms p(95)=197.32ms p(99)=276.68ms max=541.83ms
+     http_req_failed................: 0.00%   0 out of 101514
+     ✓ { name:seat_lock }...........: 0.00%   0 out of 4421
+     http_req_receiving.............: avg=2.87ms   min=16.1µs   med=59.66µs  p(90)=3.08ms   p(95)=15.14ms  p(99)=68.23ms  max=252.45ms
+     http_req_sending...............: avg=334.01µs min=5.83µs   med=13.67µs  p(90)=73.4µs   p(95)=178.72µs p(99)=4.68ms   max=270.82ms
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       p(90)=0s       p(95)=0s       p(99)=0s       max=0s      
+     http_req_waiting...............: avg=82.99ms  min=987.65µs med=76.25ms  p(90)=150.61ms p(95)=177.65ms p(99)=248.81ms max=569.64ms
+     http_reqs......................: 101514  1353.370817/s
+     iteration_duration.............: avg=266ms    min=4.26ms   med=179.42ms p(90)=332.38ms p(95)=413.93ms p(99)=3.43s    max=9.29s   
+     iterations.....................: 45125   601.600352/s
+     seat_contention_409............: 3304    44.048478/s
+     seats_won......................: 2225    29.663397/s
+   ✓ unexpected_errors..............: 0       0/s
+     vus............................: 1       min=1              max=200
+     vus_max........................: 200     min=200            max=200
+     waiting_room_admission_ms......: avg=20.7ms   min=0s       med=0s       p(90)=0s       p(95)=0s       p(99)=508ms    max=8.85s   
+
+
+running (1m15.0s), 000/200 VUs, 45125 complete and 0 interrupted iterations
+drop ✓ [ 100% ] 000/200 VUs  1m15s

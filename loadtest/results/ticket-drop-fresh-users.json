@@ -1,0 +1,267 @@
+{
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "login 200": {
+                    "passes": 1275,
+                    "fails": 0,
+                    "name": "login 200",
+                    "path": "::login 200",
+                    "id": "48b06dc5cde7f6ebb606ad7da726a2a5"
+                },
+                "queue join 200": {
+                    "fails": 0,
+                    "name": "queue join 200",
+                    "path": "::queue join 200",
+                    "id": "585a5ed54b65a381441833eb7dced426",
+                    "passes": 1275
+                },
+                "seat map 200": {
+                    "name": "seat map 200",
+                    "path": "::seat map 200",
+                    "id": "8bbe9212d14ff82b486eec09425e055c",
+                    "passes": 1275,
+                    "fails": 0
+                },
+                "payment accepted": {
+                    "path": "::payment accepted",
+                    "id": "5302e54b352bc86d54379751784c7791",
+                    "passes": 1019,
+                    "fails": 0,
+                    "name": "payment accepted"
+                },
+                "confirmed booking has a QR code": {
+                    "fails": 0,
+                    "name": "confirmed booking has a QR code",
+                    "path": "::confirmed booking has a QR code",
+                    "id": "44ae6a5693f53e48dc6162f2676c71e7",
+                    "passes": 914
+                }
+            }
+    },
+    "metrics": {
+        "seats_won": {
+            "count": 2037,
+            "rate": 26.712646232698972
+        },
+        "http_req_sending": {
+            "med": 0.020995,
+            "p(90)": 0.07283240000000002,
+            "p(95)": 0.1252142,
+            "p(99)": 0.33663296000000076,
+            "max": 162.540659,
+            "avg": 0.15628240923284178,
+            "min": 0.006233
+        },
+        "data_received": {
+            "count": 380147464,
+            "rate": 4985147.138973818
+        },
+        "seat_contention_409": {
+            "count": 256,
+            "rate": 3.357112143137426
+        },
+        "unexpected_errors": {
+            "count": 0,
+            "rate": 0,
+            "thresholds": {
+                "count<1": false
+            }
+        },
+        "http_req_duration{name:seats_available}": {
+            "med": 177.461971,
+            "p(90)": 574.8909212000001,
+            "p(95)": 771.2420420999995,
+            "p(99)": 1324.6756280399998,
+            "max": 2060.424564,
+            "avg": 264.52083462901953,
+            "min": 4.857278,
+            "thresholds": {
+                "p(95)<2000": false
+            }
+        },
+        "iteration_duration": {
+            "avg": 9867.170205484716,
+            "min": 937.829024,
+            "med": 10693.05097,
+            "p(90)": 14460.312956000002,
+            "p(95)": 15438.4346076,
+            "p(99)": 17869.08789926,
+            "max": 19953.272297
+        },
+        "http_req_duration{expected_response:true}": {
+            "avg": 489.91412583579404,
+            "min": 1.24252,
+            "med": 332.251576,
+            "p(90)": 1123.7146972000005,
+            "p(95)": 1472.2096643999998,
+            "p(99)": 2267.7391253200008,
+            "max": 3770.261734
+        },
+        "http_reqs": {
+            "count": 16333,
+            "rate": 214.1863774760296
+        },
+        "iterations": {
+            "count": 1275,
+            "rate": 16.719992119141477
+        },
+        "vus_max": {
+            "value": 200,
+            "min": 200,
+            "max": 200
+        },
+        "admitted_rate": {
+            "passes": 1275,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_duration{name:seat_lock}": {
+            "avg": 600.7459606109815,
+            "min": 2.072789,
+            "med": 424.409597,
+            "p(90)": 1309.8272038000011,
+            "p(95)": 1621.1718830999994,
+            "p(99)": 2846.441456399998,
+            "max": 3438.708778,
+            "thresholds": {
+                "p(95)<1000": true
+            }
+        },
+        "http_req_duration{name:queue_status}": {
+            "avg": 560.1840720800637,
+            "min": 1.24252,
+            "med": 454.0150625,
+            "p(90)": 1135.5944012,
+            "p(95)": 1578.072918699999,
+            "p(99)": 1916.81746785,
+            "max": 2324.652531,
+            "thresholds": {
+                "p(95)<300": true
+            }
+        },
+        "http_req_receiving": {
+            "p(90)": 2.778135800000001,
+            "p(95)": 6.614579399999999,
+            "p(99)": 142.74666264000263,
+            "max": 1184.613272,
+            "avg": 5.3968925171126045,
+            "min": 0.017056,
+            "med": 0.349352
+        },
+        "http_req_duration": {
+            "p(99)": 2267.7391253200008,
+            "max": 3770.261734,
+            "avg": 489.91412583579404,
+            "min": 1.24252,
+            "med": 332.251576,
+            "p(90)": 1123.7146972000005,
+            "p(95)": 1472.2096643999998
+        },
+        "http_req_failed": {
+            "fails": 16333,
+            "passes": 0,
+            "value": 0
+        },
+        "booking_success_rate": {
+            "passes": 914,
+            "fails": 361,
+            "value": 0.7168627450980393
+        },
+        "http_req_blocked": {
+            "min": 0.001585,
+            "med": 0.005429,
+            "p(90)": 0.009889600000000002,
+            "p(95)": 0.01298839999999999,
+            "p(99)": 0.2629137200000005,
+            "max": 45.114026,
+            "avg": 0.0221383542521277
+        },
+        "http_req_connecting": {
+            "p(95)": 0,
+            "p(99)": 0.16659464000000004,
+            "max": 45.032608,
+            "avg": 0.011737076777077088,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0
+        },
+        "http_req_waiting": {
+            "max": 3764.134991,
+            "avg": 484.3609509094473,
+            "min": 0.950141,
+            "med": 322.71037,
+            "p(90)": 1116.7760248,
+            "p(95)": 1467.4596855999987,
+            "p(99)": 2267.1734785200006
+        },
+        "booking_confirm_ms": {
+            "min": 504,
+            "med": 2128.5,
+            "p(90)": 4949.700000000001,
+            "p(95)": 5690.499999999999,
+            "p(99)": 6888.97,
+            "max": 8125,
+            "avg": 2634.2592997811817
+        },
+        "vus": {
+            "value": 2,
+            "min": 2,
+            "max": 200
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "max": 0
+        },
+        "data_sent": {
+            "count": 11842360,
+            "rate": 155297.3849976755
+        },
+        "checks": {
+            "passes": 5758,
+            "fails": 0,
+            "value": 1
+        },
+        "http_req_duration{name:queue_join}": {
+            "p(95)": 1922.7046001999984,
+            "p(99)": 2927.82778664,
+            "max": 3770.261734,
+            "avg": 593.3006532870601,
+            "min": 1.310565,
+            "med": 365.056839,
+            "p(90)": 1565.4693170000003,
+            "thresholds": {
+                "p(95)<500": true
+            }
+        },
+        "waiting_room_admission_ms": {
+            "min": 503,
+            "med": 5422,
+            "p(90)": 8657.6,
+            "p(95)": 9480.5,
+            "p(99)": 10369.56,
+            "max": 11194,
+            "avg": 5154.756862745098
+        },
+        "http_req_failed{name:seat_lock}": {
+            "passes": 0,
+            "fails": 1275,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        }
+    },
+    "setup_data": {
+        "eventId": "28511b3d-433b-40f2-ad41-d602977f5235",
+        "ticketTypeId": "b01aa669-d793-43b1-adc0-a6b970d1cf86"
+    }
+}
