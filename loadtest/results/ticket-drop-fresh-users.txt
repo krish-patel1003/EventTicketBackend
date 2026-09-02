@@ -1,0 +1,16 @@
+     admitted_rate..................: 100.00% 1275 out of 1275
+     booking_confirm_ms.............: avg=2.63s    min=504ms    med=2.12s    p(90)=4.94s    p(95)=5.69s    p(99)=6.88s    max=8.12s   
+     booking_success_rate...........: 71.68%  914 out of 1275
+     ✗ { name:queue_join }..........: avg=593.3ms  min=1.31ms   med=365.05ms p(90)=1.56s    p(95)=1.92s    p(99)=2.92s    max=3.77s   
+     ✗ { name:queue_status }........: avg=560.18ms min=1.24ms   med=454.01ms p(90)=1.13s    p(95)=1.57s    p(99)=1.91s    max=2.32s   
+     ✗ { name:seat_lock }...........: avg=600.74ms min=2.07ms   med=424.4ms  p(90)=1.3s     p(95)=1.62s    p(99)=2.84s    max=3.43s   
+     ✓ { name:seats_available }.....: avg=264.52ms min=4.85ms   med=177.46ms p(90)=574.89ms p(95)=771.24ms p(99)=1.32s    max=2.06s   
+     http_req_failed................: 0.00%   0 out of 16333
+     ✓ { name:seat_lock }...........: 0.00%   0 out of 1275
+     http_reqs......................: 16333   214.186377/s
+     iterations.....................: 1275    16.719992/s
+     seat_contention_409............: 256     3.357112/s
+     seats_won......................: 2037    26.712646/s
+   ✓ unexpected_errors..............: 0       0/s
+     waiting_room_admission_ms......: avg=5.15s    min=503ms    med=5.42s    p(90)=8.65s    p(95)=9.48s    p(99)=10.36s   max=11.19s  
+time="2026-09-02T18:38:52Z" level=error msg="thresholds on metrics 'http_req_duration{name:queue_join}, http_req_duration{name:queue_status}, http_req_duration{name:seat_lock}' have been crossed"

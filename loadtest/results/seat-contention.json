@@ -1,0 +1,173 @@
+{
+    "root_group": {
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {
+            "setup": {
+                "checks": {
+                    "login 200": {
+                        "passes": 1,
+                        "fails": 0,
+                        "name": "login 200",
+                        "path": "::setup::login 200",
+                        "id": "647055af8ffe21e58084ae4b140cdda0"
+                    }
+                },
+                "name": "setup",
+                "path": "::setup",
+                "id": "5c0f8025f7e0b6654089e5b00e950f1a",
+                "groups": {}
+            }
+        },
+        "checks": {
+            "login 200": {
+                "name": "login 200",
+                "path": "::login 200",
+                "id": "48b06dc5cde7f6ebb606ad7da726a2a5",
+                "passes": 150,
+                "fails": 0
+            },
+            "lock answered 200 or 409": {
+                "name": "lock answered 200 or 409",
+                "path": "::lock answered 200 or 409",
+                "id": "36602e273ab2dcb27f4a63fb46bbca50",
+                "passes": 150,
+                "fails": 0
+            }
+        },
+        "name": "",
+        "path": ""
+    },
+    "metrics": {
+        "iterations": {
+            "count": 150,
+            "rate": 15.330183591359821
+        },
+        "seat_won": {
+            "count": 1,
+            "rate": 0.10220122394239882,
+            "thresholds": {
+                "count==1": false
+            }
+        },
+        "http_req_duration{expected_response:true}": {
+            "min": 1.882049,
+            "med": 52.960079,
+            "max": 6148.984796,
+            "p(90)": 4093.8056823,
+            "p(95)": 5010.873947199997,
+            "avg": 1063.099756669529
+        },
+        "checks": {
+            "passes": 301,
+            "fails": 0,
+            "value": 1
+        },
+        "data_sent": {
+            "count": 604787,
+            "rate": 61809.97162445155
+        },
+        "vus_max": {
+            "value": 150,
+            "min": 150,
+            "max": 150
+        },
+        "data_received": {
+            "count": 1135881,
+            "rate": 116088.4284529159
+        },
+        "unexpected_status": {
+            "count": 0,
+            "rate": 0,
+            "thresholds": {
+                "count<1": false
+            }
+        },
+        "http_req_receiving": {
+            "avg": 0.8005927607296133,
+            "min": 0.019382,
+            "med": 0.4418545,
+            "max": 9.778352,
+            "p(90)": 1.8935972999999995,
+            "p(95)": 3.626536099999999
+        },
+        "http_req_blocked": {
+            "avg": 1.3918161502145927,
+            "min": 0.002031,
+            "med": 0.006279,
+            "max": 54.007324,
+            "p(90)": 4.419315599999994,
+            "p(95)": 11.606604999999998
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 932,
+            "value": 0
+        },
+        "http_req_tls_handshaking": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0
+        },
+        "http_req_sending": {
+            "med": 0.028648,
+            "max": 10.661639,
+            "p(90)": 0.35405069999999994,
+            "p(95)": 1.0259083499999984,
+            "avg": 0.31852842489270433,
+            "min": 0.006304
+        },
+        "http_req_connecting": {
+            "min": 0,
+            "med": 0,
+            "max": 25.45643,
+            "p(90)": 3.7831607999999988,
+            "p(95)": 11.28017879999998,
+            "avg": 1.2665262317596568
+        },
+        "iteration_duration": {
+            "p(95)": 8525.1414548,
+            "avg": 7700.549807180003,
+            "min": 6981.107632,
+            "med": 7487.972299999999,
+            "max": 8535.246802,
+            "p(90)": 8516.9809045
+        },
+        "http_reqs": {
+            "count": 932,
+            "rate": 95.2515407143157
+        },
+        "seat_refused": {
+            "rate": 15.227982367417424,
+            "count": 149
+        },
+        "vus": {
+            "max": 150,
+            "value": 73,
+            "min": 0
+        },
+        "http_req_duration": {
+            "avg": 1063.099756669529,
+            "min": 1.882049,
+            "med": 52.960079,
+            "max": 6148.984796,
+            "p(90)": 4093.8056823,
+            "p(95)": 5010.873947199997
+        },
+        "http_req_waiting": {
+            "avg": 1061.9806354839066,
+            "min": 1.562424,
+            "med": 52.3749715,
+            "max": 6137.959418,
+            "p(90)": 4093.4753049,
+            "p(95)": 5010.278413199997
+        }
+    },
+    "setup_data": {
+        "seatId": "d28c5f03-0d1f-4429-802a-f7ee91ef1385",
+        "ticketTypeId": "b1f4131c-f275-4891-8435-0e90e8de62e0",
+        "eventId": "99e01eb9-f004-4926-8b27-16c4861c1153"
+    }
+}

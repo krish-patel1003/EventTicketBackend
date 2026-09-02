@@ -1,0 +1,45 @@
+drop   [ 100% ] 014/200 VUs  1m14.9s/1m15.0s
+
+running (1m15.9s), 002/200 VUs, 989 complete and 0 interrupted iterations
+drop ↓ [ 100% ] 011/200 VUs  1m15s
+
+     ✓ login 200
+     ✓ queue join 200
+     ✓ seat map 200
+     ✓ payment accepted
+     ✓ confirmed booking has a QR code
+
+     admitted_rate..................: 100.00% 991 out of 991
+     booking_confirm_ms.............: avg=3.09s    min=505ms    med=2.63s    p(90)=7.03s    p(95)=8.13s    p(99)=9.25s    max=9.95s   
+     booking_success_rate...........: 67.81%  672 out of 991
+     checks.........................: 100.00% 4375 out of 4375
+     data_received..................: 351 MB  4.6 MB/s
+     data_sent......................: 12 MB   156 kB/s
+     http_req_blocked...............: avg=23.7µs   min=1.5µs    med=5.66µs   p(90)=10.42µs  p(95)=15.23µs  p(99)=299.81µs max=63.18ms 
+     http_req_connecting............: avg=9.89µs   min=0s       med=0s       p(90)=0s       p(95)=0s       p(99)=181.65µs max=62.79ms 
+     http_req_duration..............: avg=459.94ms min=1.53ms   med=357.8ms  p(90)=940.7ms  p(95)=1.25s    p(99)=1.9s     max=4.47s   
+       { expected_response:true }...: avg=458.44ms min=1.53ms   med=358.24ms p(90)=931.86ms p(95)=1.22s    p(99)=1.88s    max=4.47s   
+     ✗ { name:queue_join }..........: avg=489.08ms min=1.94ms   med=351.45ms p(90)=1.08s    p(95)=1.49s    p(99)=2s       max=2.97s   
+     ✗ { name:queue_status }........: avg=440.67ms min=1.53ms   med=346.71ms p(90)=831.16ms p(95)=1.11s    p(99)=1.88s    max=2.69s   
+     ✗ { name:seat_lock }...........: avg=763.07ms min=3.08ms   med=639.13ms p(90)=1.7s     p(95)=2.11s    p(99)=2.9s     max=4.47s   
+     ✓ { name:seats_available }.....: avg=399.8ms  min=7.44ms   med=291.19ms p(90)=931.92ms p(95)=1.06s    p(99)=1.36s    max=1.82s   
+     http_req_failed................: 1.62%   261 out of 16043
+     ✗ { name:seat_lock }...........: 26.33%  261 out of 991
+     http_req_receiving.............: avg=2.08ms   min=17.08µs  med=368.95µs p(90)=2.61ms   p(95)=5.61ms   p(99)=21.13ms  max=570.62ms
+     http_req_sending...............: avg=152.73µs min=6.25µs   med=21.46µs  p(90)=69.09µs  p(95)=111.32µs p(99)=292.19µs max=335.85ms
+     http_req_tls_handshaking.......: avg=0s       min=0s       med=0s       p(90)=0s       p(95)=0s       p(99)=0s       max=0s      
+     http_req_waiting...............: avg=457.7ms  min=1.17ms   med=356.77ms p(90)=925.54ms p(95)=1.23s    p(99)=1.9s     max=4.47s   
+     http_reqs......................: 16043   210.290161/s
+     iteration_duration.............: avg=12.72s   min=699.68ms med=13.3s    p(90)=18.82s   p(95)=20.42s   p(99)=24.37s   max=26.43s  
+     iterations.....................: 991     12.989936/s
+     seat_contention_409............: 187     2.451179/s
+     seats_won......................: 1459    19.124437/s
+   ✗ unexpected_errors..............: 74      0.969985/s
+     vus............................: 2       min=2            max=200
+     vus_max........................: 200     min=200          max=200
+     waiting_room_admission_ms......: avg=7.63s    min=502ms    med=7.4s     p(90)=11.56s   p(95)=12.43s   p(99)=13.69s   max=14.2s   
+
+
+running (1m16.3s), 000/200 VUs, 991 complete and 0 interrupted iterations
+drop ✓ [ 100% ] 000/200 VUs  1m15s
+time="2026-09-02T18:18:35Z" level=error msg="thresholds on metrics 'http_req_duration{name:queue_join}, http_req_duration{name:queue_status}, http_req_duration{name:seat_lock}, http_req_failed{name:seat_lock}, unexpected_errors' have been crossed"
