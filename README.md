@@ -172,24 +172,29 @@ docker ps                    # is the tickify-postgres container up at all?
 lsof -nP -iTCP:5432 -sTCP:LISTEN     # macOS / Linux — what owns the port
 ```
 
-Then pick one:
+Then pick one. **A changes nothing on your machine** and is the one to reach for first:
 
 ```bash
-# A. Free the port for Docker (macOS/Homebrew example), then re-run
-brew services stop postgresql@16
-
-# B. Keep your Postgres and move Tickify's onto spare ports
+# A. Leave your Postgres alone; move Tickify's onto spare ports
 POSTGRES_PORT=55432 REDIS_PORT=56379 RABBITMQ_PORT=55672 docker compose up -d
 DB_URL=jdbc:postgresql://localhost:55432/mydatabase \
   REDIS_PORT=56379 RABBITMQ_PORT=55672 java -jar target/tickify-1.0.0.jar
 
-# C. Keep using your own Postgres — create the role and database it expects
+# B. Use your own Postgres — create the role and database it expects
 psql -U postgres -c "CREATE USER myuser WITH PASSWORD 'secret' SUPERUSER;"
 psql -U postgres -c "CREATE DATABASE mydatabase OWNER myuser;"
+docker compose up -d redis rabbitmq mailhog     # still needed
+
+# C. Stop your Postgres so Docker can have 5432
+pg_ctl -D /opt/homebrew/var/postgresql@16 stop  # or, whatever started it:
+kill $(lsof -tiTCP:5432 -sTCP:LISTEN)
 ```
 
-Option C still needs Redis and RabbitMQ, so bring those up with
-`docker compose up -d redis rabbitmq mailhog`.
+`brew services stop postgresql@16` does the same as C, but only when `brew services`
+itself is working — a Homebrew that is out of step with its formulae fails with
+`undefined method 'stop_timeout' for an instance of Homebrew::Service`. That is a
+Homebrew problem, not a Tickify one (`brew update` usually clears it); options A and B
+avoid needing it at all.
 </details>
 
 <details>
