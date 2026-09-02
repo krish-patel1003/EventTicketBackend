@@ -4,7 +4,6 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.tickify.user.config.properties.JwtProperties;
-import com.tickify.util.CryptoUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -35,8 +34,4 @@ public class JwtConfig {
         return NimbusJwtDecoder.withPublicKey(jwtProperties.getPublicKey()).build();
     }
 
-    @Bean
-    public CryptoUtil cryptoUtil() throws Exception {
-        return new CryptoUtil(jwtProperties.getPrivateKey(), jwtProperties.getPublicKey());
-    }
 }

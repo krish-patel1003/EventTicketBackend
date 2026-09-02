@@ -9,7 +9,8 @@ interface AuthState {
   roles: Role[];
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, roles: string[]) => Promise<void>;
+  /** Resolves true when the account is ready to use, false when it awaits e-mail verification. */
+  signUp: (email: string, password: string, roles: string[]) => Promise<boolean>;
   signOut: () => Promise<void>;
   hasRole: (role: Role) => boolean;
 }
@@ -58,8 +59,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(
     async (email: string, password: string, requestedRoles: string[]) => {
-      await auth.register(email, password, requestedRoles);
+      const registration = await auth.register(email, password, requestedRoles);
+
+      // Signing in straight away only works when verification is switched off. With it on,
+      // the API correctly refuses the login, and the new account's own success screen would
+      // report "your email is not verified" as though registering had failed.
+      if (registration.emailVerifiedRequired) {
+        return false;
+      }
+
       await signIn(email, password);
+      return true;
     },
     [signIn],
   );

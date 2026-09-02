@@ -1,6 +1,7 @@
 package com.tickify.exception;
 
 import com.tickify.dto.ErrorResponseDto;
+import com.tickify.user.exception.EmailVerificationException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ValidationException;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +43,32 @@ public class GlobalExceptionHandler {
             BadCredentialsException ex, HttpServletRequest request) {
 
         return buildResponse(HttpStatus.UNAUTHORIZED.value(), ex.getMessage(), request);
+    }
+
+    /**
+     * Signing in before confirming the e-mail address.
+     *
+     * <p>{@code EmailVerificationException} is an {@code AuthenticationException}, so
+     * DaoAuthenticationProvider wraps anything it throws in an
+     * {@link InternalAuthenticationServiceException} — which read as an internal fault and
+     * came back as a 500 with the reason buried in a stack trace. It is a 403 with a message
+     * the sign-in screen can show, and the cause carries the text worth showing.
+     */
+    @ExceptionHandler({EmailVerificationException.class, InternalAuthenticationServiceException.class})
+    public ResponseEntity<ErrorResponseDto> handleUnverifiedEmail(
+            Exception ex, HttpServletRequest request) {
+
+        Throwable cause = ex instanceof InternalAuthenticationServiceException ? ex.getCause() : ex;
+
+        if (cause instanceof EmailVerificationException) {
+            return buildResponse(HttpStatus.FORBIDDEN.value(), cause.getMessage(), request);
+        }
+
+        // Any other wrapped failure really is internal: a database outage during a lookup,
+        // for instance. Keep the trace for those.
+        log.error("Authentication failed unexpectedly on {}", request.getRequestURI(), ex);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "An unexpected error occurred", request);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)

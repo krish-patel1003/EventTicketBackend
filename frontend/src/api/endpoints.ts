@@ -15,11 +15,18 @@ import type {
 
 export const auth = {
   register: (email: string, password: string, requestedRoles: string[]) =>
-    api.anonymousPost<{ id: string; email: string; roles: string[] }>('/api/v1/auth/register', {
-      email,
-      password,
-      requestedRoles,
-    }),
+    api.anonymousPost<{
+      id: string;
+      email: string;
+      /** True when the account cannot sign in until the address is confirmed. */
+      emailVerifiedRequired: boolean;
+      roles: string[];
+    }>('/api/v1/auth/register', { email, password, requestedRoles }),
+
+  resendVerification: (email: string) =>
+    api.anonymousPost<void>(
+      `/api/v1/auth/email/resend-verification?email=${encodeURIComponent(email)}`,
+    ),
 
   login: (email: string, password: string) =>
     api.anonymousPost<AuthResponse>('/api/v1/auth/login', { email, password }),

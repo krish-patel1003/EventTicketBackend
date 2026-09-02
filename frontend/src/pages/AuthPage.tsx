@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { auth as authApi } from '../api/endpoints';
 import { useAuth } from '../hooks/useAuth';
 import { Alert } from '../components/common';
 
@@ -15,8 +16,62 @@ export function AuthPage() {
   const [roles, setRoles] = useState<string[]>(['USER']);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Set once an account has been created that cannot sign in until its address is confirmed.
+  const [awaitingVerification, setAwaitingVerification] = useState<string | null>(null);
+  const [resent, setResent] = useState(false);
 
   if (profile) return <Navigate to={location.state?.from ?? '/events'} replace />;
+
+  if (awaitingVerification) {
+    return (
+      <main className="page auth-page">
+        <div className="card">
+          <h1>Check your inbox</h1>
+          <p className="muted">
+            Your account is created. We've sent a verification link to{' '}
+            <strong>{awaitingVerification}</strong> — open it to activate the account, then sign in.
+          </p>
+          <p className="small muted">
+            Running locally with MailHog? The message is waiting at{' '}
+            <a href="http://localhost:8025" target="_blank" rel="noreferrer">
+              localhost:8025
+            </a>
+            .
+          </p>
+
+          {resent && <Alert kind="success">Verification link sent again.</Alert>}
+          {error && <Alert kind="error">{error}</Alert>}
+
+          <div className="row" style={{ marginTop: '1rem' }}>
+            <button
+              className="secondary"
+              disabled={busy}
+              onClick={() => {
+                setBusy(true);
+                setError(null);
+                authApi
+                  .resendVerification(awaitingVerification)
+                  .then(() => setResent(true))
+                  .catch((e: Error) => setError(e.message))
+                  .finally(() => setBusy(false));
+              }}
+            >
+              {busy ? 'Sending…' : 'Resend link'}
+            </button>
+            <button
+              onClick={() => {
+                setAwaitingVerification(null);
+                setResent(false);
+                setMode('signin');
+              }}
+            >
+              I've verified — sign in
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const toggleRole = (role: string) =>
     setRoles((current) =>
@@ -31,7 +86,10 @@ export function AuthPage() {
       if (mode === 'signin') {
         await signIn(email, password);
       } else {
-        await signUp(email, password, roles.length ? roles : ['USER']);
+        const signedIn = await signUp(email, password, roles.length ? roles : ['USER']);
+        if (!signedIn) {
+          setAwaitingVerification(email);
+        }
       }
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Something went wrong');
