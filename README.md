@@ -118,11 +118,21 @@ Numbers, methodology and the full before/after: **[docs/LOAD_TESTING.md](docs/LO
 
 ## Quick start
 
-**With Docker** (starts Postgres, Redis, RabbitMQ and MailHog from `compose.yaml`):
+Needs **Java 21** and **Docker Desktop running**. Node is not required — the `frontend`
+profile downloads its own.
 
 ```bash
-./mvnw spring-boot:run          # compose comes up automatically
+./mvnw -DskipTests -Pfrontend package    # builds the React UI into the jar
+java -jar target/tickify-1.0.0.jar       # starts compose.yaml, then the app
 ```
+
+The jar brings Postgres, Redis, RabbitMQ and MailHog up itself via `compose.yaml`. On Windows
+use `mvnw.cmd`. First run takes a few minutes while Maven and npm populate their caches; wait
+for `Started TickifyApplication`.
+
+> `./mvnw spring-boot:run` also works and is quicker for backend-only work, but it stops at the
+> `compile` phase — the frontend is copied into the build at `prepare-package`, so the UI will
+> not be served. Use the packaged jar above, or run the SPA separately (below).
 
 **Without Docker** — native services, the way the load-test results above were produced:
 
@@ -143,6 +153,75 @@ Then open:
 
 Sign up from the UI and tick **ORGANIZER** and **STAFF** as well as **USER** — that gives you the
 organizer console (to publish an event) and the gate scanner (to validate the ticket you buy).
+
+### Troubleshooting
+
+<details>
+<summary><code>FATAL: role "myuser" does not exist</code> on startup</summary>
+
+The app reached a PostgreSQL that isn't the one from `compose.yaml` — almost always a
+Postgres already installed on the host (Homebrew, Postgres.app, an old container) holding
+port 5432. Either Docker was not running, so the app fell back to its default JDBC URL and
+found that server, or the compose container could not bind the port because the host server
+already had it.
+
+Find out which is listening:
+
+```bash
+docker ps                    # is the tickify-postgres container up at all?
+lsof -nP -iTCP:5432 -sTCP:LISTEN     # macOS / Linux — what owns the port
+```
+
+Then pick one:
+
+```bash
+# A. Free the port for Docker (macOS/Homebrew example), then re-run
+brew services stop postgresql@16
+
+# B. Keep your Postgres and move Tickify's onto spare ports
+POSTGRES_PORT=55432 REDIS_PORT=56379 RABBITMQ_PORT=55672 docker compose up -d
+DB_URL=jdbc:postgresql://localhost:55432/mydatabase \
+  REDIS_PORT=56379 RABBITMQ_PORT=55672 java -jar target/tickify-1.0.0.jar
+
+# C. Keep using your own Postgres — create the role and database it expects
+psql -U postgres -c "CREATE USER myuser WITH PASSWORD 'secret' SUPERUSER;"
+psql -U postgres -c "CREATE DATABASE mydatabase OWNER myuser;"
+```
+
+Option C still needs Redis and RabbitMQ, so bring those up with
+`docker compose up -d redis rabbitmq mailhog`.
+</details>
+
+<details>
+<summary>Ports 8080, 5432, 6379, 5672, 1025 or 8025 already in use</summary>
+
+Every backing-service port is overridable in `compose.yaml`, and every one the app connects
+to is an environment variable (see the table in [docs/LOAD_TESTING.md](docs/LOAD_TESTING.md#tuning-knobs)
+and `application.yml`). The app's own port is `SERVER_PORT`:
+
+```bash
+SERVER_PORT=9090 java -jar target/tickify-1.0.0.jar
+```
+</details>
+
+<details>
+<summary>Docker isn't available at all</summary>
+
+`./scripts/dev-stack.sh start` runs Postgres, Redis, RabbitMQ and an SMTP sink as native
+processes instead. It expects Debian/Ubuntu package layouts and needs root; it is how the
+load-test results in [docs/LOAD_TESTING.md](docs/LOAD_TESTING.md) were produced.
+</details>
+
+<details>
+<summary>Schema errors after pulling changes</summary>
+
+The app runs with `ddl-auto=validate`, so a migration that has not been applied fails at
+startup by design. Reset the local database:
+
+```bash
+docker compose down -v && docker compose up -d
+```
+</details>
 
 ### Frontend in development
 

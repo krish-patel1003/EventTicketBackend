@@ -4,8 +4,12 @@
 # To manage them yourself:  docker compose up -d
 # Without a Docker daemon:  ./scripts/dev-stack.sh start
 #
-# Ports are fixed rather than ephemeral so the same values work whether the app is
-# started by Maven, from the jar, or from an IDE.
+# Ports are published on the host so the same values work whether the app is started by
+# Maven, from the jar, or from an IDE. Each is overridable, because a machine that already
+# runs Postgres or Redis will refuse to hand 5432/6379 to a container:
+#
+#   POSTGRES_PORT=55432 REDIS_PORT=56379 docker compose up -d
+#   DB_URL=jdbc:postgresql://localhost:55432/mydatabase REDIS_PORT=56379 java -jar target/tickify-1.0.0.jar
 services:
   postgres:
     image: 'postgres:16-alpine'
@@ -15,7 +19,7 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: secret
     ports:
-      - '5432:5432'
+      - '${POSTGRES_PORT:-5432}:5432'
     volumes:
       - tickify-pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -31,7 +35,7 @@ services:
     # nothing here needs to survive a restart, and fsync would only add latency.
     command: ['redis-server', '--save', '', '--appendonly', 'no', '--maxmemory', '512mb']
     ports:
-      - '6379:6379'
+      - '${REDIS_PORT:-6379}:6379'
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -45,8 +49,8 @@ services:
       RABBITMQ_DEFAULT_USER: myuser
       RABBITMQ_DEFAULT_PASS: secret
     ports:
-      - '5672:5672'
-      - '15672:15672'   # management UI: http://localhost:15672 (myuser / secret)
+      - '${RABBITMQ_PORT:-5672}:5672'
+      - '${RABBITMQ_MGMT_PORT:-15672}:15672'   # management UI: http://localhost:15672 (myuser / secret)
     healthcheck:
       test: ['CMD', 'rabbitmq-diagnostics', '-q', 'ping']
       interval: 10s
@@ -57,8 +61,8 @@ services:
     image: mailhog/mailhog
     container_name: tickify-mailhog
     ports:
-      - '1025:1025'     # SMTP
-      - '8025:8025'     # web inbox: http://localhost:8025
+      - '${SMTP_PORT:-1025}:1025'     # SMTP
+      - '${MAILHOG_UI_PORT:-8025}:8025'     # web inbox: http://localhost:8025
 
 volumes:
   tickify-pgdata:
